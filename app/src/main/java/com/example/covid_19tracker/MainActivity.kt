@@ -18,6 +18,7 @@ private lateinit var binding: ActivityMainBinding
 private const val BASE_URL = "https://api.covidtracking.com/api/v1/"
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
+    private lateinit var adapter: CovidSparkAdapter
     private lateinit var perStateDailyData: Map<Unit, List<CovidData>>
     private lateinit var nationalDailyData: List<CovidData>
 
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                     Log.w(TAG,"Did not receive a valid response body")
                     return
                 }
+                setupEventListeners()
                 nationalDailyData = nationalData.reversed()
                 Log.i(TAG,"Update graph with national data")
                 updateDisplayWithData(nationalDailyData)
@@ -76,9 +78,20 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun setupEventListeners() {
+        // Add a Listener for user scrubbing on the chart
+        binding.sparkView
+        binding.sparkView.isScrubEnabled = true
+        binding.sparkView.setScrubListener { itemData ->
+            if (itemData is CovidData){
+                updateInfoForDate(itemData)
+            }
+        }
+    }
+
     private fun updateDisplayWithData(dailyData: List<CovidData>) {
         // Create a SparkAdapter with the data
-        val adapter = CovidSparkAdapter(dailyData)
+        adapter = CovidSparkAdapter(dailyData)
         binding.sparkView.adapter = adapter
         // Update radio buttons to select the positive cases and max time by default
         binding.radioButtonPositive.isChecked = true
@@ -88,7 +101,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateInfoForDate(covidData: CovidData) {
-        binding.tvMetricLabel.text = NumberFormat.getInstance().format(covidData.positiveIncrease)
+        val numCases = when(adapter.metric){
+            Metric.NEGATIVE -> covidData.negativeIncrease
+            Metric.POSITIVE -> covidData.positiveIncrease
+            Metric.DEATH -> covidData.deathIncrease
+        }
+        binding.tvMetricLabel.text = NumberFormat.getInstance().format(numCases)
         val outPutDateFormat = SimpleDateFormat("MM dd, yyyy", Locale.UK)
         binding.tvDateLabel.text = outPutDateFormat.format(covidData.dateChecked)
     }

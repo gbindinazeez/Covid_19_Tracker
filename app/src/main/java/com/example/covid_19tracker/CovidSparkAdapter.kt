@@ -18,7 +18,6 @@ class CovidSparkAdapter(private val dailyData: List<CovidData>): SparkAdapter() 
             Metric.POSITIVE -> chosenDayData.positiveIncrease.toFloat()
             Metric.DEATH -> chosenDayData.deathIncrease.toFloat()
         }
-        return chosenDayData.positiveIncrease.toFloat()
     }
 
 }

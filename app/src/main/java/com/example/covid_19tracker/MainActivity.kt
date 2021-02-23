@@ -87,6 +87,29 @@ class MainActivity : AppCompatActivity() {
                 updateInfoForDate(itemData)
             }
         }
+
+        binding.radioGroupTimeSelection.setOnCheckedChangeListener { group, checkedId ->
+            adapter.daysAgo = when(checkedId){
+                R.id.radioButtonWeek -> TimeScale.WEEK
+                R.id.radioButtonMonth -> TimeScale.MONTH
+                else -> TimeScale.MAX
+            }
+            adapter.notifyDataSetChanged()
+        }
+
+        binding.radioGroupMetricSelection.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.radioButtonNegative -> updateDisplayMetric(Metric.NEGATIVE)
+                R.id.radioButtonPositive -> updateDisplayMetric(Metric.POSITIVE)
+                R.id.radioButtonDeath -> updateDisplayMetric(Metric.DEATH)
+            }
+        }
+    }
+
+    private fun updateDisplayMetric(metric: Metric) {
+        adapter.metric = metric
+        adapter.notifyDataSetChanged()
+
     }
 
     private fun updateDisplayWithData(dailyData: List<CovidData>) {

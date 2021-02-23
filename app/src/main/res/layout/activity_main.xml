@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.056" />
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/radio_group_metric_selection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -56,11 +56,11 @@
         android:id="@+id/sparkView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup2"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintBottom_toTopOf="@+id/radio_group_time_selection"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group_metric_selection" />
 
     <RadioGroup
-        android:id="@+id/radioGroup2"
+        android:id="@+id/radio_group_time_selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
